@@ -6,10 +6,18 @@ Cylon.robot({
     },
 
     devices: {
-        led: { driver: 'led', pin: 13 }
+        servo: { driver: 'servo', pin: 3 }
     },
 
     work: function(my) {
-        every((1).second(), my.led.toggle);
+        var angle = 45 ;
+        my.servo.angle(angle);
+        every((1).second(), function() {
+            angle = angle + 45 ;
+            if (angle > 135) {
+                angle = 45
+            }
+            my.servo.angle(angle);
+        });
     }
 }).start();
