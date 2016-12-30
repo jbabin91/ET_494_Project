@@ -28,6 +28,14 @@ Cylon.robot({
 "use strict";
 
 var Cylon = require("cylon");
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
+}
 
 Cylon.robot({
     connections: {
@@ -44,6 +52,7 @@ Cylon.robot({
    // work: function(my) {
       //  my.leapmotion.on("frame", function(frame) {
          //   console.log(frame.hands.length.toString());//prints 1 when hand is detected, prints 0 when hand is not detected: continous feed
+
     work: function(my) {
        /// my.leapmotion.on("hand", function(hand) {
             //console.log(hand);// prints objects of bones in hands....look into this
@@ -56,8 +65,29 @@ Cylon.robot({
           //  console.log(hand.type);//prints left or right hand
             //console.log(hand.fingers.length);//prints 5 when hand is placed over sensor(each finger)
             //console.log(hand.palmPosition);// palm position xyz cordinates
-            console.log(hand.fingerPosition);//prints finger data
+           // console.log(hand.fingerPosition);//prints finger data
+            var thumbFinger = hand.fingers[0];
+            var indexFinger = hand.fingers[1];
+            var middleFinger = hand.fingers[2];
+            var ringFinger = hand.fingers[3];
+            var pinkyRing = hand.fingers[4];
+
+           // console.log(indexFingers);
+            var thumbPosition = thumbFinger.dipPosition;
+            var indexPosition = indexFinger.dipPosition;
+            var middlePosition = middleFinger.dipPosition;
+            var ringPosition = ringFinger.dipPosition;
+            var pinkyPosition = pinkyRing.dipPosition;
+
+            console.log("Thumb Position: " + thumbPosition[0],
+                "Index Position: " + indexPosition[0],
+                "middle Position: " + middlePosition[0],
+                "ring Position: " + ringPosition[0],
+                "pinky Position: " + pinkyPosition[0] );//TODO-find out how the cordinates are placed in the array
             console.log("\n");
+
+
+          //  sleep(1000);
 
        //var a = hand.fingerTipPositions;
           // console.log(a);
