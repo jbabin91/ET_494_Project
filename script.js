@@ -22,19 +22,19 @@ Cylon.robot({
 
 
     }
-}).start();*/ // servo control example
+}).start();*/ // ARDUINO LED  example
 
 
 "use strict";
 
-var Cylon = require("cylon");
+ var Cylon = require("cylon");
 function sleep(milliseconds) {
-    var start = new Date().getTime();
+     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){
+        if ((new Date().getTime() - start) > milliseconds){    // function to delay, problematic when implemented in the work function
             break;
         }
-    }
+     }
 }
 
 Cylon.robot({
@@ -46,26 +46,14 @@ Cylon.robot({
         leapmotion: { driver: "leapmotion" }
     },
 
-   //work: function(my) {
-   //   my.leapmotion.on("hand", function(hand) {
-     //     console.log(hand.fingers.toString());//prints finger id, width, and direction for each finger. print only when hand is detected
-   // work: function(my) {
-      //  my.leapmotion.on("frame", function(frame) {
-         //   console.log(frame.hands.length.toString());//prints 1 when hand is detected, prints 0 when hand is not detected: continous feed
-
     work: function(my) {
-       /// my.leapmotion.on("hand", function(hand) {
-            //console.log(hand);// prints objects of bones in hands....look into this
-        ///    console.log("\n");
-        ///    console.log(hand.fingers);
-        ///    console.log("\n");
         my.leapmotion.on("hand", function(hand) {
-           // console.log(hand.fingers.join(","));//displays each finger with direction
-          // console.log(hand.pointables);// prints finger information
+            // work: function(my) {
+            //  my.leapmotion.on("frame", function(frame) {// fram is continous feed, may look into
+            //   console.log(frame.hands.length.toString());//prints 1 when hand is detected, prints 0 when hand is not detected: continous feed
+
           //  console.log(hand.type);//prints left or right hand
-            //console.log(hand.fingers.length);//prints 5 when hand is placed over sensor(each finger)
-            //console.log(hand.palmPosition);// palm position xyz cordinates
-           // console.log(hand.fingerPosition);//prints finger data
+
             var thumbFinger = hand.fingers[0];
             var indexFinger = hand.fingers[1];
             var middleFinger = hand.fingers[2];
@@ -79,41 +67,274 @@ Cylon.robot({
             var ringPosition = ringFinger.dipPosition;
             var pinkyPosition = pinkyRing.dipPosition;
 
-            console.log("Thumb Position: " + thumbPosition[0],
-                "Index Position: " + indexPosition[0],
-                "middle Position: " + middlePosition[0],
-                "ring Position: " + ringPosition[0],
-                "pinky Position: " + pinkyPosition[0] );//TODO-find out how the cordinates are placed in the array
-            console.log("\n");
+            var thumbVelocity = thumbFinger.tipVelocity;
+            var indexVelocity = indexFinger.tipVelocity;
+            var middleVelocity = middleFinger.tipVelocity;
+            var ringVelocity = ringFinger.tipVelocity;
+            var pinkyVelocity = pinkyRing.tipVelocity;
+
+            // Position variables
+            var thumbX = thumbPosition[0];
+            var indexX = indexPosition[0];
+            var middleX = middlePosition[0];
+            var ringX = ringPosition[0];
+            var pinkyX = pinkyPosition[0];
+            var thumbY = thumbPosition[1];
+            var indexY = indexPosition[1];
+            var middleY = middlePosition[1];
+            var ringY = ringPosition[1];
+            var pinkyY = pinkyPosition[1];
+            var thumbZ = thumbPosition[2];
+            var indexZ = indexPosition[2];
+            var middleZ = middlePosition[2];
+            var ringZ = ringPosition[2];
+            var pinkyZ = pinkyPosition[2];
 
 
-          //  sleep(1000);
 
-       //var a = hand.fingerTipPositions;
-          // console.log(a);
+            //printing the finger positions
+            // console.log(
+            //     " Thumb X Position: " + thumbPosition[0],
+            //     "Index X Position: " + indexPosition[0],
+            //     "middle X Position: " + middlePosition[0],
+            //     "ring X Position: " + ringPosition[0],
+            //     "pinky X Position: " + pinkyPosition[0], //data is stored[x,y,z]. green light facing user on leap is proper position
+            //         "\n",
+            //     "Thumb Y Position: " + thumbPosition[1],
+            //     "Index Y Position: " + indexPosition[1],
+            //     "middle Y Position: " + middlePosition[1],
+            //     "ring Y Position: " + ringPosition[1],
+            //     "pinky Y Position: " + pinkyPosition[1],
+            //          "\n",
+            //     "Thumb Z Position: " + thumbPosition[2],
+            //     "Index Z Position: " + indexPosition[2],
+            //     "middle Z Position: " + middlePosition[2],
+            //     "ring Z Position: " + ringPosition[2],
+            //     "pinky Z Position: " + pinkyPosition[2]);
+            // console.log("\n");
+             /*console.log(
+                 " thumb velocity" + thumbVelocity[0],
+                 "index velocity" + indexVelocity[0],
+                 "middle velocity" + middleVelocity[0], // when velocity is greater than 5 there is some actaul movement going on
+                 "ring velocity" + ringVelocity[0],
+                 "pinky velocity" + pinkyVelocity[0],
+                 "\n");*/
+
+
+             //thumb finger
+
+
+           if(thumbVelocity[0] >= 20) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
+                console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
+                // " Thumb X Position: " + thumbPosition[0],
+                // "Thumb Y Position: " + thumbPosition[1],
+                // "Thumb Z Position: " + thumbPosition[2],
+            }
+
+            if(thumbVelocity[0] <= -20){
+               console.log("thumb moving left");
+            }
+
+            if(thumbVelocity[1] >= 20){
+                console.log("thumb moving up");
+            }
+            if(thumbVelocity[1] <= -20){
+                console.log("thumb moving down");
+            }
+           /* if(thumbVelocity[2] >= 20){
+                console.log("thumb moving backwards");
+            }
+            if(thumbVelocity[2] <= -20){
+                console.log("thumb moving forwards");
+            }*/
+
+
+            //index finger
+
+
+            if(indexVelocity[0] >= 20) {
+                console.log("index moving right");
+            }
+            if(indexVelocity[0] <= -20){
+                console.log("index moving left");
+            }
+
+            if(indexVelocity[1] >= 20){
+                console.log("index moving up");
+            }
+            if(indexVelocity[1] <= -20){
+                console.log("index moving down");
+            }
+         /*   if(indexVelocity[2] >= 20){
+                console.log("index moving backwards");
+            }
+            if(indexVelocity[2] <= -20) {
+                console.log("index moving forwards");
+            }*/
+
+                //middle finger
+
+
+                if(middleVelocity[0] >= 20) {
+                    console.log("middle moving right");
+                }
+                if(middleVelocity[0] <= -20){
+                    console.log("middle moving left");
+                }
+
+                if(middleVelocity[1] >= 20){
+                    console.log("middle moving up");
+                }
+                if(middleVelocity[1] <= -20){
+                    console.log("middle moving down");
+                }
+               /* if(middleVelocity[2] >= 20){
+                    console.log("middle moving backwards");
+                }
+                if(middleVelocity[2] <= -20) {
+                    console.log("middle moving forwards");
+                }*/
+
+                    //ring finger
+
+
+                    if(ringVelocity[0] >= 20) {
+                        console.log("ring moving right");
+                    }
+                    if(ringVelocity[0] <= -20){
+                        console.log("ring moving left");
+                    }
+
+                    if(ringVelocity[1] >= 20){
+                        console.log("ring moving up");
+                    }
+                    if(ringVelocity[1] <= -20){
+                        console.log("ring moving down");
+                    }
+                   /* if(ringVelocity[2] >= 20){
+                        console.log("ring moving backwards");
+                    }
+                    if(ringVelocity[2] <= -20) {
+                        console.log("ring moving forwards");
+                    }*/
+                        //pinky finger
+
+
+                        if(pinkyVelocity[0] >= 20) {
+                            console.log("pinky moving right");
+                        }
+                        if(pinkyVelocity[0] <= -20){
+                            console.log("pinky moving left");
+                        }
+
+                        if(pinkyVelocity[1] >= 20){
+                            console.log("pinky moving up");
+                        }
+                        if(pinkyVelocity[1] <= -20){
+                            console.log("pinky moving down");
+                        }
+                      /*  if(pinkyVelocity[2] >= 20){
+                            console.log("pinky moving backwards");
+                        }
+                        if(pinkyVelocity[2] <= -20) {
+                            console.log("pinky moving forwards");
+                        }*/
+
+
+                        //multiple positions
+
+
+            //thumb
+
+
+            if(thumbVelocity[0] >= 20 && thumbVelocity[1] >= 20){
+                            console.log("thumb moving up towards the right");
+            }
+            if(thumbVelocity[0] <= -20 && thumbVelocity[1] <= -20){
+                console.log("thumb moving down towards the left");
+            }
+            if(thumbVelocity[0] >= 20 && thumbVelocity[1] <= -20){
+                console.log("thumb moving down towards the right");
+            }
+            if(thumbVelocity[0] <= -20 && thumbVelocity[1] >= 20){
+                console.log("thumb moving up towards the left");
+            }
+
+
+            //index
+
+
+            if(indexVelocity[0] >= 20 && indexVelocity[1] >= 20){
+                console.log("index moving up towards the right");
+            }
+            if(indexVelocity[0] <= -20 && indexVelocity[1] <= -20){
+                console.log("index moving down towards the left");
+            }
+            if(indexVelocity[0] >= 20 && indexVelocity[1] <= -20){
+                console.log("index moving down towards the right");
+            }
+            if(indexVelocity[0] <= -20 && indexVelocity[1] >= 20){
+                console.log("index moving up towards the left");
+            }
+
+
+            //middle
+
+
+            if(middleVelocity[0] >= 20 && middleVelocity[1] >= 20){
+                console.log("middle moving up towards the right");
+            }
+            if(middleVelocity[0] <= -20 && middleVelocity[1] <= -20){
+                console.log("middle moving down towards the left");
+            }
+            if(middleVelocity[0] >= 20 && middleVelocity[1] <= -20){
+                console.log("middle moving down towards the right");
+            }
+            if(middleVelocity[0] <= -20 && middleVelocity[1] >= 20){
+                console.log("middle moving up towards the left");
+            }
+
+
+            //ring
+
+
+            if(ringVelocity[0] >= 20 && ringVelocity[1] >= 20){
+                console.log("ring moving up towards the right");
+            }
+            if(ringVelocity[0] <= -20 && ringVelocity[1] <= -20){
+                console.log("ring moving down towards the left");
+            }
+            if(ringVelocity[0] >= 20 && ringVelocity[1] <= -20){
+                console.log("ring moving down towards the right");
+            }
+            if(ringVelocity[0] <= -20 && ringVelocity[1] >= 20){
+                console.log("ring moving up towards the left");
+            }
+
+
+            //pinky
+
+
+            if(pinkyVelocity[0] >= 20 && pinkyVelocity[1] >= 20){
+                console.log("pinky moving up towards the right");
+            }
+            if(pinkyVelocity[0] <= -20 && pinkyVelocity[1] <= -20){
+                console.log("pinky moving down towards the left");
+            }
+            if(pinkyVelocity[0] >= 20 && pinkyVelocity[1] <= -20){
+                console.log("pinky moving down towards the right");
+            }
+            if(pinkyVelocity[0] <= -20 && pinkyVelocity[1] >= 20){
+                console.log("pinky moving up towards the left");
+            }
+
+
+
 
         });
 
-
     }
+
 }).start();
 
 
-/* var Cylon = require('cylon');
-
- Cylon.robot({
- connections: {
- leapmotion: { adaptor: 'leapmotion' }
- },
-
- devices: {
- leapmotion: { driver: 'leapmotion' }
- },
-
- work: function(my) {
- my.leapmotion.on('hand', function(hand) {
- var position = hand.palmPosition.join(',');
- console.log("Hand position: " + position);
- });
- }
- }).start();*/ // palm position tracking...xyz cordinates
