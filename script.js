@@ -62,12 +62,16 @@ data(4);
 
 Cylon.robot({
     connections: {
-        leapmotion: { adaptor: "leapmotion" }
+        leap: { adaptor: 'leapmotion' } //,
+       // arduino: {adaptor: 'firmata', port: 'COM3'}
     },
 
 
     devices: {
-        leapmotion: { driver: "leapmotion" }
+        leapmotion: { driver: "leapmotion", connection: "leap" } //,
+      //  servo: { driver: 'servo', pin: 3 , connection: 'arduino'}
+
+
     },
 
     work: function(my) {
@@ -154,10 +158,17 @@ Cylon.robot({
               if(thumbPosition[0] > -100.4){
                   console.log("thumb coordinates moving right");
                   console.log(thumbX);
+
+                  // var angle = 45 ;
+                  // my.servo.angle(angle);
+                  // every((1).second(), function() {     // servo code
+                  //     angle = angle + 45 ;
+                  //     if (angle > 135) {
+                  //         angle = 45
+                  //     }
+                  //     my.servo.angle(angle)
               }
-                // " Thumb X Position: " + thumbPosition[0],
-                // "Thumb Y Position: " + thumbPosition[1],
-                // "Thumb Z Position: " + thumbPosition[2],
+
             }
 
             if(thumbVelocity[0] <= -15) {
@@ -171,7 +182,7 @@ Cylon.robot({
 
             if(thumbVelocity[1] >= 15) {
                 console.log("thumb moving up");
-                if (thumbPosition[1] > -100.4) {//chnage position
+                if (thumbPosition[1] > -100.4) {//chnage position need to measure
                     console.log("thumb coordinates moving up");
                     console.log(thumbY);
                 }
