@@ -28,48 +28,18 @@ Cylon.robot({
 "use strict";
 
  var Cylon = require("cylon");
-function sleep(milliseconds) {
-     var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){    // function to delay, problematic when implemented in the work function
-            break;
-        }
-     }
-}
-
-function data(coordinates){
-    var i = 0;
-    var array1 = [2];
-    for(i=0;i<3;i++)
-    {
-        array1[i] = coordinates;
-
-
-    }
-
-    for(i=0;i<3;i++){
-        console.log(array1[i]);
-        console.log("\n");
-    }
-
-
-}
-
-
-
-data(4);
 
 
 Cylon.robot({
     connections: {
-        leap: { adaptor: 'leapmotion' } //,
-       // arduino: {adaptor: 'firmata', port: 'COM3'}
+        leap: { adaptor: 'leapmotion' },
+        arduino: {adaptor: 'firmata', port: 'COM3'}
     },
 
 
     devices: {
-        leapmotion: { driver: "leapmotion", connection: "leap" } //,
-      //  servo: { driver: 'servo', pin: 3 , connection: 'arduino'}
+        leapmotion: { driver: "leapmotion", connection: "leap" } ,
+       servo: { driver: 'servo', pin: 3 , connection: 'arduino'}
 
 
     },
@@ -121,9 +91,9 @@ Cylon.robot({
 
 
             //printing the finger positions
-          /*   console.log(// data is stored [x,y,z]
-                 " Thumb X Position: " + thumbPosition[0],  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
-                 "Index X Position: " + indexPosition[0],// -41.3 ''''
+          /* console.log(// data is stored [x,y,z]
+                 " Thumb X Position: " + thumbPosition[0]);  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
+                /* "Index X Position: " + indexPosition[0],// -41.3 ''''
                  "middle X Position: " + middlePosition[0],//-21'''''
                  "ring X Position: " + ringPosition[0],//-2.1''''
                  "pinky X Position: " + pinkyPosition[0],//27.2 - 27.35(positive)''''
@@ -139,7 +109,7 @@ Cylon.robot({
             //     "middle Z Position: " + middlePosition[2],
             //     "ring Z Position: " + ringPosition[2],
             //     "pinky Z Position: " + pinkyPosition[2]);
-            // console.log("\n");
+            // console.log("\n");/*
              /*console.log(
                  " thumb velocity" + thumbVelocity[0],
                  "index velocity" + indexVelocity[0],
@@ -153,34 +123,63 @@ Cylon.robot({
              //thumb finger
 
 
-          if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
+      /*   if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
                 console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
-              if(thumbPosition[0] > -100.4){
-                  console.log("thumb coordinates moving right");
+              if(thumbPosition[0] > -47){
+                  console.log("thumb coordinates moving right"); //-25 is the most right, -47 is middle, -82 is most left(used thumb resting on edge of pixel pushed againg the usb port on leap
                   console.log(thumbX);
+                  var thumbAngle1 = 90;
 
-                  // var angle = 45 ;
-                  // my.servo.angle(angle);
-                  // every((1).second(), function() {     // servo code
-                  //     angle = angle + 45 ;
-                  //     if (angle > 135) {
-                  //         angle = 45
-                  //     }
-                  //     my.servo.angle(angle)
-              }
+                    //  my.servo.angle(thumbAngle1);
 
-            }
+                      console.log(thumbAngle1);
+                  thumbAngle1++;
+                  console.log(thumbAngle1++);
+                  }
 
-            if(thumbVelocity[0] <= -15) {
-                console.log("thumb moving left");
-                if (thumbPosition[0] < -100.4) {
-                    console.log("thumb coordinates moving left");
-                    console.log(thumbX);
 
+
+
+
+              }*/
+                var thumbParameter = -40;
+                var thumbParameter2 = -130;
+
+
+           // if ( thumbParameter <= thumbX <= thumbParameter2) {
+               // console.log(thumbX);
+
+                    //if (thumbX < -50) {
+                    //  console.log("thumb coordinates moving left");
+                    //console.log(thumbX);
+                    // if(thumbX <= -90 || thumbX > -52){ //4.5 degrees per point
+                   // console.log(thumbX);
+                    if (-110 >= thumbX >= -120){// && thumbVelocity[0] <= -15 ) {
+                        console.log("thumb moving left");
+                        console.log(thumbX);
+                        var angle = 45;
+                        console.log(angle);
+                        my.servo.angle(angle);
+                    }
+
+               /* if (thumbVelocity[0] <= -15) {
+                    if (-40 >= thumbX >= -55) {
+                        var angle1 = 90;
+                        console.log(angle1);
+
+                         my.servo.angle(angle1);
+                    }
+                    //  if(-55<thubX<-65)
+
+                    //var thumbAngle2 = 90
+                    // my.servo.angle(thumbAngle2);
                 }
-            }
+          //  }
 
-            if(thumbVelocity[1] >= 15) {
+                //}
+
+
+          /*  if(thumbVelocity[1] >= 15) {
                 console.log("thumb moving up");
                 if (thumbPosition[1] > -100.4) {//chnage position need to measure
                     console.log("thumb coordinates moving up");
@@ -199,13 +198,13 @@ Cylon.robot({
           //  }
           //  if(thumbVelocity[2] <= -20){
           //      console.log("thumb moving forwards");
-          //  }
+          //  }*/
 
 
             //index finger
 
 
-            if(indexVelocity[0] >= 20) {
+           /* if(indexVelocity[0] >= 20) {
                 console.log("index moving right");
                 if (indexPosition[0] > -100.4) {//chnage value
                     console.log("index coordinates moving right");
@@ -357,7 +356,7 @@ Cylon.robot({
                         // }
                         // if(pinkyVelocity[2] <= -20) {
                         //     console.log("pinky moving forwards");
-                        // }
+                        // }*/
 
 
                         //multiple positions
@@ -461,6 +460,7 @@ Cylon.robot({
             //possible spring mechnaism to assist the fingers to open
             //hallowed finger to store a spring with a wire running through the spring and attaches to an attachment point
             //springs in palm with wire anchored to the spring and finger
+            //possibly use a 360 servo
 
 
         });
