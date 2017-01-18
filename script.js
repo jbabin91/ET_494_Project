@@ -45,27 +45,63 @@ Cylon.robot({
     },
 
     work: function(my) {
-        my.leapmotion.on("hand", function(hand) {
-            // work: function(my) {
-            //  my.leapmotion.on("frame", function(frame) {// fram is continous feed, may look into
-            //   console.log(frame.hands.length.toString());//prints 1 when hand is detected, prints 0 when hand is not detected: continous feed
+        my.leapmotion.on("hand", function(hand) { // hand, hand
 
-          //  console.log(hand.type);//prints left or right hand
+
+
+           /* if(frame.hands.length > 0) {
+
+                    var thumbFinger = frame.fingers[0];
+                    var thumbPosition = thumbFinger.dipPosition;
+                    var thumbVelocity = thumbFinger.tipVelocity;
+                    var thumbX = thumbPosition[0];
+                   // console.log(thumbX);
+                    if ( thumbX < -60 && thumbX > -80) {
+                        console.log(90);
+                      //  my.servo.angle(90);
+                    }
+                if(thumbX > -200 && thumbX < -100){
+                   // my.servo.angle(0);
+                    console.log(0);
+                }
+
+
+           }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             var thumbFinger = hand.fingers[0];
+           // var thumbFinger = frame.hands();
             var indexFinger = hand.fingers[1];
             var middleFinger = hand.fingers[2];
             var ringFinger = hand.fingers[3];
             var pinkyRing = hand.fingers[4];
 
 
-            var thumbPosition = thumbFinger.dipPosition;
-            var indexPosition = indexFinger.dipPosition;
+           var thumbPosition = thumbFinger.dipPosition;
+           var indexPosition = indexFinger.dipPosition;
             var middlePosition = middleFinger.dipPosition;
             var ringPosition = ringFinger.dipPosition;
             var pinkyPosition = pinkyRing.dipPosition;
 
-            var thumbVelocity = thumbFinger.tipVelocity;
+           var thumbVelocity = thumbFinger.tipVelocity;
             var indexVelocity = indexFinger.tipVelocity;
             var middleVelocity = middleFinger.tipVelocity;
             var ringVelocity = ringFinger.tipVelocity;
@@ -91,92 +127,61 @@ Cylon.robot({
 
 
             //printing the finger positions
-          /* console.log(// data is stored [x,y,z]
-                 " Thumb X Position: " + thumbPosition[0]);  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
-                /* "Index X Position: " + indexPosition[0],// -41.3 ''''
-                 "middle X Position: " + middlePosition[0],//-21'''''
-                 "ring X Position: " + ringPosition[0],//-2.1''''
-                 "pinky X Position: " + pinkyPosition[0],//27.2 - 27.35(positive)''''
-                    "\n",
-                 "Thumb Y Position: " + thumbPosition[1],//140.9-141.5(positive)''''
-                 "Index Y Position: " + indexPosition[1],//151-162(positive)''''
-                 "middle Y Position: " + middlePosition[1],//160.3-160.45(positive)''''
-                 "ring Y Position: " + ringPosition[1],//163.2-163.34(positive)''''
-                 "pinky Y Position: " + pinkyPosition[1],//162.2-162.5(positive)''''
-                     "\n");*/
+           // console.log(// data is stored [x,y,z]
+           //       " Thumb X Position: " + thumbPosition[0]);  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
+           //       "Index X Position: " + indexPosition[0],// -41.3 ''''
+           //       "middle X Position: " + middlePosition[0],//-21'''''
+           //       "ring X Position: " + ringPosition[0],//-2.1''''
+           //       "pinky X Position: " + pinkyPosition[0],//27.2 - 27.35(positive)''''
+           //          "\n",
+           //       "Thumb Y Position: " + thumbPosition[1],//140.9-141.5(positive)''''
+           //       "Index Y Position: " + indexPosition[1],//151-162(positive)''''
+           //       "middle Y Position: " + middlePosition[1],//160.3-160.45(positive)''''
+           //       "ring Y Position: " + ringPosition[1],//163.2-163.34(positive)''''
+           //       "pinky Y Position: " + pinkyPosition[1],//162.2-162.5(positive)''''
+           //           "\n");
             //     "Thumb Z Position: " + thumbPosition[2],
             //     "Index Z Position: " + indexPosition[2],
             //     "middle Z Position: " + middlePosition[2],
             //     "ring Z Position: " + ringPosition[2],
             //     "pinky Z Position: " + pinkyPosition[2]);
-            // console.log("\n");/*
-             /*console.log(
-                 " thumb velocity" + thumbVelocity[0],
-                 "index velocity" + indexVelocity[0],
-                 "middle velocity" + middleVelocity[0], // when velocity is greater than 5 there is some actaul movement going on
-                 "ring velocity" + ringVelocity[0],
-                 "pinky velocity" + pinkyVelocity[0],
-                 "\n");*/
+            // console.log("\n");
+            //  console.log(
+            //      " thumb velocity" + thumbVelocity[0],
+            //      "index velocity" + indexVelocity[0],
+            //      "middle velocity" + middleVelocity[0], // when velocity is greater than 5 there is some actaul movement going on
+            //      "ring velocity" + ringVelocity[0],
+            //      "pinky velocity" + pinkyVelocity[0],
+            //      "\n");
 
 
 
              //thumb finger
 
 
-      /*   if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
-                console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
-              if(thumbPosition[0] > -47){
-                  console.log("thumb coordinates moving right"); //-25 is the most right, -47 is middle, -82 is most left(used thumb resting on edge of pixel pushed againg the usb port on leap
-                  console.log(thumbX);
+        if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
+               // console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
+              if(thumbPosition[0] > -47) {
+                  //console.log("thumb coordinates moving right"); //-25 is the most right, -47 is middle, -82 is most left(used thumb resting on edge of pixel pushed againg the usb port on leap
+                 // console.log(thumbX);
                   var thumbAngle1 = 90;
+                //  console.log(thumbAngle1);
 
-                    //  my.servo.angle(thumbAngle1);
+                  my.servo.angle(thumbAngle1);
+              }
+                if(thumbPosition[0] >-200 && thumbPosition[0] < -100){
+                      console.log(0);
+                      my.servo.angle(0);
 
-                      console.log(thumbAngle1);
-                  thumbAngle1++;
-                  console.log(thumbAngle1++);
-                  }
-
-
-
-
-
-              }*/
-                var thumbParameter = -40;
-                var thumbParameter2 = -130;
+                                    }
 
 
-           // if ( thumbParameter <= thumbX <= thumbParameter2) {
-               // console.log(thumbX);
 
-                    //if (thumbX < -50) {
-                    //  console.log("thumb coordinates moving left");
-                    //console.log(thumbX);
-                    // if(thumbX <= -90 || thumbX > -52){ //4.5 degrees per point
-                   // console.log(thumbX);
-                    if (-110 >= thumbX >= -120){// && thumbVelocity[0] <= -15 ) {
-                        console.log("thumb moving left");
-                        console.log(thumbX);
-                        var angle = 45;
-                        console.log(angle);
-                        my.servo.angle(angle);
-                    }
 
-               /* if (thumbVelocity[0] <= -15) {
-                    if (-40 >= thumbX >= -55) {
-                        var angle1 = 90;
-                        console.log(angle1);
 
-                         my.servo.angle(angle1);
-                    }
-                    //  if(-55<thubX<-65)
+              }
 
-                    //var thumbAngle2 = 90
-                    // my.servo.angle(thumbAngle2);
-                }
-          //  }
 
-                //}
 
 
           /*  if(thumbVelocity[1] >= 15) {
