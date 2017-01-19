@@ -39,7 +39,8 @@ Cylon.robot({
 
     devices: {
         leapmotion: { driver: "leapmotion", connection: "leap" } ,
-       servo: { driver: 'servo', pin: 3 , connection: 'arduino'}
+        servo: { driver: 'servo', pin: 3 , connection: 'arduino'},
+        servo2: {driver: 'servo', pin: 4, connection: 'arduino'}
 
 
     },
@@ -88,7 +89,6 @@ Cylon.robot({
 
 
             var thumbFinger = hand.fingers[0];
-           // var thumbFinger = frame.hands();
             var indexFinger = hand.fingers[1];
             var middleFinger = hand.fingers[2];
             var ringFinger = hand.fingers[3];
@@ -161,25 +161,32 @@ Cylon.robot({
 
         if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
                // console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
-              if(thumbPosition[0] > -47) {
+              if(thumbPosition[0] > -99 && thumbPosition[0] < -71) {
                   //console.log("thumb coordinates moving right"); //-25 is the most right, -47 is middle, -82 is most left(used thumb resting on edge of pixel pushed againg the usb port on leap
                  // console.log(thumbX);
                   var thumbAngle1 = 90;
                 //  console.log(thumbAngle1);
 
                   my.servo.angle(thumbAngle1);
+                  console.log(90);
               }
                 if(thumbPosition[0] >-200 && thumbPosition[0] < -100){
                       console.log(0);
                       my.servo.angle(0);
 
-                                    }
+                }
+        }
 
-
-
-
-
-              }
+        if(indexVelocity[0] >= 15) {
+            if(indexPosition[0] <-40 && indexPosition[0] >-70){
+                my.servo2.angle(180);
+                console.log(180);
+            }
+            if(indexPosition[0] < -10 && indexPosition[0] >-39){
+                my.servo2.angle(145);
+                console.log(145);
+            }
+        }
 
 
 
