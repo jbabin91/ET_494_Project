@@ -1,29 +1,3 @@
-/*var Cylon = require('cylon');
-
-Cylon.robot({
-
-    connections: {
-        leap: { adaptor: 'leapmotion'},
-        arduino: {adaptor: 'firmata', port: 'COM3'}
-    },
-
-    devices: {
-        led: { driver: 'led' , pin: 13, connection: 'arduino'}
-    },
-
-    work: function(my) {
-        my.leap.on('frame', function (frame){
-            if (frame.hands.length > 0){
-                my.led.turnOn();
-            } else {
-                my.led.turnOff();
-            }
-        });
-
-
-    }
-}).start();*/ // ARDUINO LED  example
-
 
 "use strict";
 
@@ -33,60 +7,29 @@ Cylon.robot({
 Cylon.robot({
     connections: {
         leap: { adaptor: 'leapmotion' },
-        arduino: {adaptor: 'firmata', port: 'COM3'}
+        //arduino: {adaptor: 'firmata', port: 'COM3'}
     },
 
 
+
     devices: {
-        leapmotion: { driver: "leapmotion", connection: "leap" } ,
-        servo: { driver: 'servo', pin: 3 , connection: 'arduino'},
-        servo2: {driver: 'servo', pin: 4, connection: 'arduino'}
+        leapmotion: { driver: "leapmotion", connection: "leap" }, //,
+      /* servo: { driver: 'servo', pin: 3 , connection: 'arduino'}, //thumb servo//90 degrees is straight ahead(towards wires) 0 is to the right 90 degrees
+        servo1:{driver: 'servo' , pin: 9 , connection: 'arduino'},//right side thumb movement
+        servo2: {driver: 'servo', pin: 4, connection: 'arduino'},   //index servo
+        servo3: {driver: 'servo', pin: 5, connection: 'arduino'},   //middle servo
+        servo4: {driver: 'servo', pin: 6, connection: 'arduino'},   //ring servo
+        servo5: {driver: 'servo', pin: 7, connection: 'arduino'},  //pinky servo
+        servo6: {driver: 'servo', pin: 8, connection: 'arduino'},    //open/close thumb servo*/
+
 
 
     },
 
     work: function(my) {
-        my.leapmotion.on("hand", function(hand) { // hand, hand
+        my.leapmotion.on("hand", function(hand) {
 
-
-
-           /* if(frame.hands.length > 0) {
-
-                    var thumbFinger = frame.fingers[0];
-                    var thumbPosition = thumbFinger.dipPosition;
-                    var thumbVelocity = thumbFinger.tipVelocity;
-                    var thumbX = thumbPosition[0];
-                   // console.log(thumbX);
-                    if ( thumbX < -60 && thumbX > -80) {
-                        console.log(90);
-                      //  my.servo.angle(90);
-                    }
-                if(thumbX > -200 && thumbX < -100){
-                   // my.servo.angle(0);
-                    console.log(0);
-                }
-
-
-           }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            //initialize all fingera
 
             var thumbFinger = hand.fingers[0];
             var indexFinger = hand.fingers[1];
@@ -94,20 +37,23 @@ Cylon.robot({
             var ringFinger = hand.fingers[3];
             var pinkyRing = hand.fingers[4];
 
+            //initalize the Distal Phalanx of each finger(finger tip bone)
 
-           var thumbPosition = thumbFinger.dipPosition;
-           var indexPosition = indexFinger.dipPosition;
+            var thumbPosition = thumbFinger.dipPosition;
+            var indexPosition = indexFinger.dipPosition;
             var middlePosition = middleFinger.dipPosition;
             var ringPosition = ringFinger.dipPosition;
             var pinkyPosition = pinkyRing.dipPosition;
 
-           var thumbVelocity = thumbFinger.tipVelocity;
+            //initalize the velocity for each finger
+
+            var thumbVelocity = thumbFinger.tipVelocity;
             var indexVelocity = indexFinger.tipVelocity;
             var middleVelocity = middleFinger.tipVelocity;
             var ringVelocity = ringFinger.tipVelocity;
             var pinkyVelocity = pinkyRing.tipVelocity;
 
-            // Position variables
+            // Position variables for X and Y axis
             var thumbX = thumbPosition[0];
             var indexX = indexPosition[0];
             var middleX = middlePosition[0];
@@ -118,75 +64,647 @@ Cylon.robot({
             var middleY = middlePosition[1];
             var ringY = ringPosition[1];
             var pinkyY = pinkyPosition[1];
-          /*  var thumbZ = thumbPosition[2];
-            var indexZ = indexPosition[2];
-            var middleZ = middlePosition[2];  //shouldnt need z position but included it just incase
-            var ringZ = ringPosition[2];
-            var pinkyZ = pinkyPosition[2];*/
 
 
+            //  my.servo2.angle(90);//start servo at center position
 
             //printing the finger positions
-           // console.log(// data is stored [x,y,z]
-           //       " Thumb X Position: " + thumbPosition[0]);  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
-           //       "Index X Position: " + indexPosition[0],// -41.3 ''''
-           //       "middle X Position: " + middlePosition[0],//-21'''''
-           //       "ring X Position: " + ringPosition[0],//-2.1''''
-           //       "pinky X Position: " + pinkyPosition[0],//27.2 - 27.35(positive)''''
-           //          "\n",
-           //       "Thumb Y Position: " + thumbPosition[1],//140.9-141.5(positive)''''
-           //       "Index Y Position: " + indexPosition[1],//151-162(positive)''''
-           //       "middle Y Position: " + middlePosition[1],//160.3-160.45(positive)''''
-           //       "ring Y Position: " + ringPosition[1],//163.2-163.34(positive)''''
-           //       "pinky Y Position: " + pinkyPosition[1],//162.2-162.5(positive)''''
-           //           "\n");
-            //     "Thumb Z Position: " + thumbPosition[2],
-            //     "Index Z Position: " + indexPosition[2],
-            //     "middle Z Position: " + middlePosition[2],
-            //     "ring Z Position: " + ringPosition[2],
-            //     "pinky Z Position: " + pinkyPosition[2]);
-            // console.log("\n");
-            //  console.log(
-            //      " thumb velocity" + thumbVelocity[0],
-            //      "index velocity" + indexVelocity[0],
-            //      "middle velocity" + middleVelocity[0], // when velocity is greater than 5 there is some actaul movement going on
-            //      "ring velocity" + ringVelocity[0],
-            //      "pinky velocity" + pinkyVelocity[0],
-            //      "\n");
+            console.log(// data is stored [x,y,z]
+                " Thumb X Position: " + thumbPosition[0],  // -62.4 position of thumb at aprox 6 inches from base of ruler to base of thumb---goes less negative  when moving right
+                "Index X Position: " + indexPosition[0],// -41.3 ''''
+                "middle X Position: " + middlePosition[0],//-21'''''
+                "ring X Position: " + ringPosition[0],//-2.1''''
+                "pinky X Position: " + pinkyPosition[0],//27.2 - 27.35(positive)''''
+                //          "\n",
+                //       "Thumb Y Position: " + thumbPosition[1],//140.9-141.5(positive)''''
+                //       "Index Y Position: " + indexPosition[1],//151-162(positive)''''
+                //       "middle Y Position: " + middlePosition[1],//160.3-160.45(positive)''''
+                //       "ring Y Position: " + ringPosition[1],//163.2-163.34(positive)''''
+                //       "pinky Y Position: " + pinkyPosition[1],//162.2-162.5(positive)''''
+                //           "\n");
+                //     "Thumb Z Position: " + thumbPosition[2],
+                //     "Index Z Position: " + indexPosition[2],
+                //     "middle Z Position: " + middlePosition[2],
+                //     "ring Z Position: " + ringPosition[2],
+                //     "pinky Z Position: " + pinkyPosition[2]);
+                // console.log("\n");
+                //  console.log(
+                //      " thumb velocity" + thumbVelocity[0],
+                //      "index velocity" + indexVelocity[0],
+                //      "middle velocity" + middleVelocity[0], // when velocity is greater than 5 there is some actaul movement going on
+                //      "ring velocity" + ringVelocity[0],
+                //      "pinky velocity" + pinkyVelocity[0],
+                "\n");
+
+
+            //thumb finger servo control function
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /////////////////////////////////////////////////////////////////
+            //-48 is neutral, -7 is far right, -88 is far left
+//             if(thumbVelocity[0] >= 15 || thumbVelocity[0] <= -15){
+//                 if(thumbPosition[0] >-88 && thumbPosition[0] < -7){
+//                     if(thumbPosition[0] > -48&& thumbPosition[0] < -47){
+//                         my.servo.angle(90);
+//                     }
+//                     if(thumbPosition[0] > -47&& thumbPosition[0] < -44){
+//                         my.servo.angle(83);
+//                     }
+//                     if(thumbPosition[0] > -44&& thumbPosition[0] < -41){
+//                         my.servo.angle(76);
+//                     }
+//                     if(thumbPosition[0] > -41&& thumbPosition[0] < -38){
+//                         my.servo.angle(69);
+//                     }
+//                     if(thumbPosition[0] > -38&& thumbPosition[0] < -35){
+//                         my.servo.angle(62);
+//                     }
+//                     if(thumbPosition[0] > -35&& thumbPosition[0] < -32){
+//                         my.servo.angle(55);
+//                     }
+//                     if(thumbPosition[0] > -32&& thumbPosition[0] < -29){
+//                         my.servo.angle(48);
+//                     }
+//                     if(thumbPosition[0] > -29&& thumbPosition[0] < -26){
+//                         my.servo.angle(41);
+//                     }
+//                     if(thumbPosition[0] > -26&& thumbPosition[0] < -23){
+//                         my.servo.angle(34);
+//                     }
+//                     if(thumbPosition[0] > -23&& thumbPosition[0] < -20){
+//                         my.servo.angle(27);
+//                     }
+//                     if(thumbPosition[0] > -20&& thumbPosition[0] < -17){
+//                         my.servo.angle(20);
+//                     }
+//                     if(thumbPosition[0] > -17&& thumbPosition[0] < -14){
+//                         my.servo.angle(13);
+//                     }
+//                     if(thumbPosition[0] > -14&& thumbPosition[0] < -11){
+//                         my.servo.angle(6);
+//                     }
+//                     if(thumbPosition[0] > -11)/*&& thumbPosition[0] < -6)*/{
+//                         my.servo.angle(0);
+//                     }
+//                     if (thumbPosition[0] < -48 && thumbPosition[0] > -51) {
+//                         my.servo.angle(90);
+//                     }
+//                     if (thumbPosition[0] < -51 && thumbPosition[0] > -54) {
+//                         my.servo.angle(97);
+//                     }
+//                     if (thumbPosition[0] < -54 && thumbPosition[0] > -57) {
+//                         my.servo.angle(104);
+//                     }
+//                     if (thumbPosition[0] < -57 && thumbPosition[0] > -60) {
+//                         my.servo.angle(111);
+//                     }
+//                     if (thumbPosition[0] < -60 && thumbPosition[0] > -63) {
+//                         my.servo.angle(118);
+//                     }
+//                     if (thumbPosition[0] < -63 && thumbPosition[0] > -66) {
+//                         my.servo.angle(125);
+//                     }
+//                     if (thumbPosition[0] < -66 && thumbPosition[0] > -69) {
+//                         my.servo.angle(132);
+//                     }
+//                     if (thumbPosition[0] < -69 && thumbPosition[0] > -72) {
+//                         my.servo.angle(139);
+//                     }
+//                     if (thumbPosition[0] < -72 && thumbPosition[0] > -75) {
+//                         my.servo.angle(146);
+//                     }
+//                     if (thumbPosition[0] < -75 && thumbPosition[0] > -78) {
+//                         my.servo.angle(153);
+//                     }
+//                     if (thumbPosition[0] < -78 && thumbPosition[0] > -81) {
+//                         my.servo.angle(160);
+//                     }
+//                     if (thumbPosition[0] < -81 && thumbPosition[0] > -84) {
+//                         my.servo.angle(167);
+//                     }
+//                     if (thumbPosition[0] < -84 && thumbPosition[0] > -88) {
+//                         my.servo.angle(174);
+//                     }
+//                     if (thumbPosition[0] < -88 )/*&& thumbPosition[0] > -90)*/ {
+//                         my.servo.angle(180);
+//                     }
+//
+//                 }
+//             }
+//
+//         //index servo functionTODO fix program
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//         if(indexVelocity[0] >= 15 || indexVelocity[0] <= -10) {//right movemnt || left movement
+//             if (indexPosition[0] > -61 && indexPosition[0] < 10) {
+//                 if (indexPosition[0] > -33 && indexPosition[0] < -30) {//60 is max left -33 is neutral(middle//going by 4 degrees
+//                     console.log(97);
+//                     my.servo2.angle(90);
+//
+//                 }
+//
+//                 if (indexPosition[0] > -30 && indexPosition[0] < -27) {//60 is max left -33 is neutral(middle
+//                     console.log(104);
+//                     my.servo2.angle(83);
+//                 }
+//                 if (indexPosition[0] > -27 && indexPosition[0] < -24) {//60 is max left -33 is neutral(middle
+//                     console.log(111);
+//                     my.servo2.angle(76);
+//                 }
+//                 if (indexPosition[0] > -24 && indexPosition[0] < -21) {//60 is max left -33 is neutral(middle
+//                     console.log(118);
+//                     my.servo2.angle(69);
+//                 }
+//                 if (indexPosition[0] > -21 && indexPosition[0] < -18) {//60 is max left -33 is neutral(middle
+//                     console.log(125);
+//                     my.servo2.angle(62);
+//                 }
+//                 if (indexPosition[0] > -18 && indexPosition[0] < -15) {//60 is max left -33 is neutral(middle
+//                     console.log(132);
+//                     my.servo2.angle(55);
+//                 }
+//                 if (indexPosition[0] > -15 && indexPosition[0] < -12) {//60 is max left -33 is neutral(middle
+//                     console.log(139);
+//                     my.servo2.angle(48);
+//                 }
+//                 if (indexPosition[0] > -12 && indexPosition[0] < -9) {//60 is max left -33 is neutral(middle
+//                     console.log(146);
+//                     my.servo2.angle(41);
+//                 }
+//                 if (indexPosition[0] > -9 && indexPosition[0] < -6) {//60 is max left -33 is neutral(middle
+//                     console.log(153);
+//                     my.servo2.angle(34);
+//                 }
+//                 if (indexPosition[0] > -6 && indexPosition[0] < -3) {//60 is max left -33 is neutral(middle
+//                     console.log(160);
+//                     my.servo2.angle(27);
+//                 }
+//                 if (indexPosition[0] > -3 && indexPosition[0] < 0) {//60 is max left -33 is neutral(middle
+//                     console.log(167);
+//                     my.servo2.angle(20);
+//                 }
+//                 if (indexPosition[0] > 0 && indexPosition[0] < 3) {//60 is max left -33 is neutral(middle
+//                     console.log(174);
+//                     my.servo2.angle(13);
+//                 }
+//                 if (indexPosition[0] > 3 && indexPosition[0] < 6) {//60 is max left -33 is neutral(middle
+//                     console.log(180);
+//                     my.servo2.angle(6);
+//                 }
+//                 if (indexPosition[0] > 6 )/*&& indexPosition[0] < 9)*/ {//60 is max left -33 is neutral(middle
+//                     console.log(0);
+//                 }
+//
+//                 // if(indexVelocity[0] <= -10){//left movement
+//                 if (indexPosition[0] < -33 && indexPosition[0] > -35) {//60 is max left -33 is neutral(middle
+//                     console.log(0);
+//                     my.servo2.angle(90);
+//
+//                 }
+//                 if (indexPosition[0] < -35 && indexPosition[0] > -37) {//60 is max left -33 is neutral(middle
+//                     console.log(7);
+//                     my.servo2.angle(97);
+//
+//                 }
+//                 if (indexPosition[0] < -37 && indexPosition[0] > -39) {//60 is max left -33 is neutral(middle
+//                     console.log(14);
+//                     my.servo2.angle(104);
+//
+//                 }
+//                 if (indexPosition[0] < -39 && indexPosition[0] > -41) {//60 is max left -33 is neutral(middle
+//                     console.log(21);
+//                     my.servo2.angle(111);
+//
+//                 }
+//                 if (indexPosition[0] < -41 && indexPosition[0] > -43) {//60 is max left -33 is neutral(middle
+//                     console.log(28);
+//                     my.servo2.angle(118);
+//
+//                 }
+//                 if (indexPosition[0] < -43 && indexPosition[0] > -45) {//60 is max left -33 is neutral(middle
+//                     console.log(35);
+//                     my.servo2.angle(125);
+//
+//                 }
+//                 if (indexPosition[0] < -45 && indexPosition[0] > -47) {//60 is max left -33 is neutral(middle
+//                     console.log(42);
+//                     my.servo2.angle(132);
+//
+//                 }
+//                 if (indexPosition[0] < -47 && indexPosition[0] > -49) {//60 is max left -33 is neutral(middle
+//                     console.log(49);
+//                     my.servo2.angle(139);
+//
+//                 }
+//                 if (indexPosition[0] < -49 && indexPosition[0] > -51) {//60 is max left -33 is neutral(middle
+//                     console.log(56);
+//                     my.servo2.angle(146);
+//
+//                 }
+//                 if (indexPosition[0] < -51 && indexPosition[0] > -53) {//60 is max left -33 is neutral(middle
+//                     console.log(63);
+//                     my.servo2.angle(153);
+//
+//                 }
+//                 if (indexPosition[0] < -51 && indexPosition[0] > -53) {//60 is max left -33 is neutral(middle
+//                     console.log(70);
+//                     my.servo2.angle(160);
+//
+//                 }
+//                 if (indexPosition[0] < -53 && indexPosition[0] > -55) {//60 is max left -33 is neutral(middle
+//                     console.log(77);
+//                     my.servo2.angle(167);
+//
+//                 }
+//                 if (indexPosition[0] < -55 && indexPosition[0] > -57) {//60 is max left -33 is neutral(middle
+//                     console.log(84);
+//                     my.servo2.angle(174);
+//
+//                 }
+//                 if (indexPosition[0] > -57 )/*&& indexPosition[0] > -60) */{//60 is max left -33 is neutral(middle
+//                     console.log(90);
+//                     my.servo2.angle(180);
+//                 }
+//             }//end second if
+//         }//end first if*/
+//end index servo control--possibly go up less degrees?
+////////////////////////////////////////////////////////////////////////////////////////////
+
+            ///////////middle finger control//////////////////////////////////////////////////////
+
+            //-48 is neutral, -7 is far right, -88 is far left
+//             if(thumbVelocity[0] >= 15 || thumbVelocity[0] <= -15){
+//                 if(thumbPosition[0] >-88 && thumbPosition[0] < -7){
+//                     if(thumbPosition[0] > -48&& thumbPosition[0] < -47){
+//                         my.servo.angle(90);
+//                     }
+//                     if(thumbPosition[0] > -47&& thumbPosition[0] < -44){
+//                         my.servo.angle(83);
+//                     }
+//                     if(thumbPosition[0] > -44&& thumbPosition[0] < -41){
+//                         my.servo.angle(76);
+//                     }
+//                     if(thumbPosition[0] > -41&& thumbPosition[0] < -38){
+//                         my.servo.angle(69);
+//                     }
+//                     if(thumbPosition[0] > -38&& thumbPosition[0] < -35){
+//                         my.servo.angle(62);
+//                     }
+//                     if(thumbPosition[0] > -35&& thumbPosition[0] < -32){
+//                         my.servo.angle(55);
+//                     }
+//                     if(thumbPosition[0] > -32&& thumbPosition[0] < -29){
+//                         my.servo.angle(48);
+//                     }
+//                     if(thumbPosition[0] > -29&& thumbPosition[0] < -26){
+//                         my.servo.angle(41);
+//                     }
+//                     if(thumbPosition[0] > -26&& thumbPosition[0] < -23){
+//                         my.servo.angle(34);
+//                     }
+//                     if(thumbPosition[0] > -23&& thumbPosition[0] < -20){
+//                         my.servo.angle(27);
+//                     }
+//                     if(thumbPosition[0] > -20&& thumbPosition[0] < -17){
+//                         my.servo.angle(20);
+//                     }
+//                     if(thumbPosition[0] > -17&& thumbPosition[0] < -14){
+//                         my.servo.angle(13);
+//                     }
+//                     if(thumbPosition[0] > -14&& thumbPosition[0] < -11){
+//                         my.servo.angle(6);
+//                     }
+//                     if(thumbPosition[0] > -11)/*&& thumbPosition[0] < -6)*/{
+//                         my.servo.angle(0);
+//                     }
+//                     if (thumbPosition[0] < -48 && thumbPosition[0] > -51) {
+//                         my.servo.angle(90);
+//                     }
+//                     if (thumbPosition[0] < -51 && thumbPosition[0] > -54) {
+//                         my.servo.angle(97);
+//                     }
+//                     if (thumbPosition[0] < -54 && thumbPosition[0] > -57) {
+//                         my.servo.angle(104);
+//                     }
+//                     if (thumbPosition[0] < -57 && thumbPosition[0] > -60) {
+//                         my.servo.angle(111);
+//                     }
+//                     if (thumbPosition[0] < -60 && thumbPosition[0] > -63) {
+//                         my.servo.angle(118);
+//                     }
+//                     if (thumbPosition[0] < -63 && thumbPosition[0] > -66) {
+//                         my.servo.angle(125);
+//                     }
+//                     if (thumbPosition[0] < -66 && thumbPosition[0] > -69) {
+//                         my.servo.angle(132);
+//                     }
+//                     if (thumbPosition[0] < -69 && thumbPosition[0] > -72) {
+//                         my.servo.angle(139);
+//                     }
+//                     if (thumbPosition[0] < -72 && thumbPosition[0] > -75) {
+//                         my.servo.angle(146);
+//                     }
+//                     if (thumbPosition[0] < -75 && thumbPosition[0] > -78) {
+//                         my.servo.angle(153);
+//                     }
+//                     if (thumbPosition[0] < -78 && thumbPosition[0] > -81) {
+//                         my.servo.angle(160);
+//                     }
+//                     if (thumbPosition[0] < -81 && thumbPosition[0] > -84) {
+//                         my.servo.angle(167);
+//                     }
+//                     if (thumbPosition[0] < -84 && thumbPosition[0] > -88) {
+//                         my.servo.angle(174);
+//                     }
+//                     if (thumbPosition[0] < -88 )/*&& thumbPosition[0] > -90)*/ {
+//                         my.servo.angle(180);
+//                     }
+//
+//                 }
+//             }
+//
+
+ //end middle finger control/////////////////////////////////////////////////
 
 
 
-             //thumb finger
 
 
-        if(thumbVelocity[0] >= 15) {  //when green light on LEAP is facing the user, right is positive, up is negative, down and left is negative, down and right is postive, up and right is postive, up and left is negative
-               // console.log("thumb moving right");//green light facing user--x right is postive, y up is positve, z forward push is negative
-              if(thumbPosition[0] > -99 && thumbPosition[0] < -71) {
-                  //console.log("thumb coordinates moving right"); //-25 is the most right, -47 is middle, -82 is most left(used thumb resting on edge of pixel pushed againg the usb port on leap
-                 // console.log(thumbX);
-                  var thumbAngle1 = 90;
-                //  console.log(thumbAngle1);
 
-                  my.servo.angle(thumbAngle1);
-                  console.log(90);
-              }
-                if(thumbPosition[0] >-200 && thumbPosition[0] < -100){
-                      console.log(0);
-                      my.servo.angle(0);
+            ///////////ring finger control////////////////////////////////
 
-                }
-        }
+            //-48 is neutral, -7 is far right, -88 is far left
+//             if(thumbVelocity[0] >= 15 || thumbVelocity[0] <= -15){
+//                 if(thumbPosition[0] >-88 && thumbPosition[0] < -7){
+//                     if(thumbPosition[0] > -48&& thumbPosition[0] < -47){
+//                         my.servo.angle(90);
+//                     }
+//                     if(thumbPosition[0] > -47&& thumbPosition[0] < -44){
+//                         my.servo.angle(83);
+//                     }
+//                     if(thumbPosition[0] > -44&& thumbPosition[0] < -41){
+//                         my.servo.angle(76);
+//                     }
+//                     if(thumbPosition[0] > -41&& thumbPosition[0] < -38){
+//                         my.servo.angle(69);
+//                     }
+//                     if(thumbPosition[0] > -38&& thumbPosition[0] < -35){
+//                         my.servo.angle(62);
+//                     }
+//                     if(thumbPosition[0] > -35&& thumbPosition[0] < -32){
+//                         my.servo.angle(55);
+//                     }
+//                     if(thumbPosition[0] > -32&& thumbPosition[0] < -29){
+//                         my.servo.angle(48);
+//                     }
+//                     if(thumbPosition[0] > -29&& thumbPosition[0] < -26){
+//                         my.servo.angle(41);
+//                     }
+//                     if(thumbPosition[0] > -26&& thumbPosition[0] < -23){
+//                         my.servo.angle(34);
+//                     }
+//                     if(thumbPosition[0] > -23&& thumbPosition[0] < -20){
+//                         my.servo.angle(27);
+//                     }
+//                     if(thumbPosition[0] > -20&& thumbPosition[0] < -17){
+//                         my.servo.angle(20);
+//                     }
+//                     if(thumbPosition[0] > -17&& thumbPosition[0] < -14){
+//                         my.servo.angle(13);
+//                     }
+//                     if(thumbPosition[0] > -14&& thumbPosition[0] < -11){
+//                         my.servo.angle(6);
+//                     }
+//                     if(thumbPosition[0] > -11)/*&& thumbPosition[0] < -6)*/{
+//                         my.servo.angle(0);
+//                     }
+//                     if (thumbPosition[0] < -48 && thumbPosition[0] > -51) {
+//                         my.servo.angle(90);
+//                     }
+//                     if (thumbPosition[0] < -51 && thumbPosition[0] > -54) {
+//                         my.servo.angle(97);
+//                     }
+//                     if (thumbPosition[0] < -54 && thumbPosition[0] > -57) {
+//                         my.servo.angle(104);
+//                     }
+//                     if (thumbPosition[0] < -57 && thumbPosition[0] > -60) {
+//                         my.servo.angle(111);
+//                     }
+//                     if (thumbPosition[0] < -60 && thumbPosition[0] > -63) {
+//                         my.servo.angle(118);
+//                     }
+//                     if (thumbPosition[0] < -63 && thumbPosition[0] > -66) {
+//                         my.servo.angle(125);
+//                     }
+//                     if (thumbPosition[0] < -66 && thumbPosition[0] > -69) {
+//                         my.servo.angle(132);
+//                     }
+//                     if (thumbPosition[0] < -69 && thumbPosition[0] > -72) {
+//                         my.servo.angle(139);
+//                     }
+//                     if (thumbPosition[0] < -72 && thumbPosition[0] > -75) {
+//                         my.servo.angle(146);
+//                     }
+//                     if (thumbPosition[0] < -75 && thumbPosition[0] > -78) {
+//                         my.servo.angle(153);
+//                     }
+//                     if (thumbPosition[0] < -78 && thumbPosition[0] > -81) {
+//                         my.servo.angle(160);
+//                     }
+//                     if (thumbPosition[0] < -81 && thumbPosition[0] > -84) {
+//                         my.servo.angle(167);
+//                     }
+//                     if (thumbPosition[0] < -84 && thumbPosition[0] > -88) {
+//                         my.servo.angle(174);
+//                     }
+//                     if (thumbPosition[0] < -88 )/*&& thumbPosition[0] > -90)*/ {
+//                         my.servo.angle(180);
+//                     }
+//
+//                 }
+//             }
+//
 
-        if(indexVelocity[0] >= 15) {
-            if(indexPosition[0] <-40 && indexPosition[0] >-70){
-                my.servo2.angle(180);
-                console.log(180);
-            }
-            if(indexPosition[0] < -10 && indexPosition[0] >-39){
-                my.servo2.angle(145);
-                console.log(145);
-            }
-        }
+            ///////////end ring finger control////////////////////////////////
+
+
+
+
+
+            ///////////pinkey finger control//////////////////////////////////
+
+            //-48 is neutral, -7 is far right, -88 is far left
+//             if(thumbVelocity[0] >= 15 || thumbVelocity[0] <= -15){
+//                 if(thumbPosition[0] >-88 && thumbPosition[0] < -7){
+//                     if(thumbPosition[0] > -48&& thumbPosition[0] < -47){
+//                         my.servo.angle(90);
+//                     }
+//                     if(thumbPosition[0] > -47&& thumbPosition[0] < -44){
+//                         my.servo.angle(83);
+//                     }
+//                     if(thumbPosition[0] > -44&& thumbPosition[0] < -41){
+//                         my.servo.angle(76);
+//                     }
+//                     if(thumbPosition[0] > -41&& thumbPosition[0] < -38){
+//                         my.servo.angle(69);
+//                     }
+//                     if(thumbPosition[0] > -38&& thumbPosition[0] < -35){
+//                         my.servo.angle(62);
+//                     }
+//                     if(thumbPosition[0] > -35&& thumbPosition[0] < -32){
+//                         my.servo.angle(55);
+//                     }
+//                     if(thumbPosition[0] > -32&& thumbPosition[0] < -29){
+//                         my.servo.angle(48);
+//                     }
+//                     if(thumbPosition[0] > -29&& thumbPosition[0] < -26){
+//                         my.servo.angle(41);
+//                     }
+//                     if(thumbPosition[0] > -26&& thumbPosition[0] < -23){
+//                         my.servo.angle(34);
+//                     }
+//                     if(thumbPosition[0] > -23&& thumbPosition[0] < -20){
+//                         my.servo.angle(27);
+//                     }
+//                     if(thumbPosition[0] > -20&& thumbPosition[0] < -17){
+//                         my.servo.angle(20);
+//                     }
+//                     if(thumbPosition[0] > -17&& thumbPosition[0] < -14){
+//                         my.servo.angle(13);
+//                     }
+//                     if(thumbPosition[0] > -14&& thumbPosition[0] < -11){
+//                         my.servo.angle(6);
+//                     }
+//                     if(thumbPosition[0] > -11)/*&& thumbPosition[0] < -6)*/{
+//                         my.servo.angle(0);
+//                     }
+//                     if (thumbPosition[0] < -48 && thumbPosition[0] > -51) {
+//                         my.servo.angle(90);
+//                     }
+//                     if (thumbPosition[0] < -51 && thumbPosition[0] > -54) {
+//                         my.servo.angle(97);
+//                     }
+//                     if (thumbPosition[0] < -54 && thumbPosition[0] > -57) {
+//                         my.servo.angle(104);
+//                     }
+//                     if (thumbPosition[0] < -57 && thumbPosition[0] > -60) {
+//                         my.servo.angle(111);
+//                     }
+//                     if (thumbPosition[0] < -60 && thumbPosition[0] > -63) {
+//                         my.servo.angle(118);
+//                     }
+//                     if (thumbPosition[0] < -63 && thumbPosition[0] > -66) {
+//                         my.servo.angle(125);
+//                     }
+//                     if (thumbPosition[0] < -66 && thumbPosition[0] > -69) {
+//                         my.servo.angle(132);
+//                     }
+//                     if (thumbPosition[0] < -69 && thumbPosition[0] > -72) {
+//                         my.servo.angle(139);
+//                     }
+//                     if (thumbPosition[0] < -72 && thumbPosition[0] > -75) {
+//                         my.servo.angle(146);
+//                     }
+//                     if (thumbPosition[0] < -75 && thumbPosition[0] > -78) {
+//                         my.servo.angle(153);
+//                     }
+//                     if (thumbPosition[0] < -78 && thumbPosition[0] > -81) {
+//                         my.servo.angle(160);
+//                     }
+//                     if (thumbPosition[0] < -81 && thumbPosition[0] > -84) {
+//                         my.servo.angle(167);
+//                     }
+//                     if (thumbPosition[0] < -84 && thumbPosition[0] > -88) {
+//                         my.servo.angle(174);
+//                     }
+//                     if (thumbPosition[0] < -88 )/*&& thumbPosition[0] > -90)*/ {
+//                         my.servo.angle(180);
+//                     }
+//
+//                 }
+//             }
+//
+
+            ///////////end pinkey finger control/////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
