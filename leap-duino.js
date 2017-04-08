@@ -49,7 +49,7 @@ io.once('ready', function(){
             }
         });
     });
-)};
+});
 
 // map two number ranges, adapted from SO: 10756313
 Number.prototype.map = function () {
