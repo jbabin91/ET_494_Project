@@ -412,7 +412,7 @@ Number.prototype.map = function () {
     // is the servo range reversed? uncomment below
     output = (servo_range[1] - output)/2;
     return output;
-}
+};
 
 /*********************************************************************************************************/
 /******************************** LEAP MOTION STATUS AND INITIALIZATION **********************************/

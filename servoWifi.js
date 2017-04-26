@@ -3,14 +3,14 @@
 var VirtualSerialPort = require('udp-serial').SerialPort;
 var firmata = require('firmata');
 var five = require("johnny-five");
-var Leap = require("../ET_494_Project/node_modules/leapjs/lib/index"),
+var Leap = require("../node_modules/leapjs/lib/index"),
 	board, palm, motor, leap_range = [50,-50], servo_range = [0,179];
 
 
  
 //create the udp serialport and specify the host and port to connect to
 var sp = new VirtualSerialPort({
-  host: '192.168.1.3',
+  host: '192.168.1.2',
   type: 'udp4',//udp4
   port: 3030
 });
@@ -27,16 +27,64 @@ io.once('ready', function() {
     io.isReady = true;
 
     var board = new five.Board({io: io, repl: true});
-    var controller = new Leap.Controller()
+    var controller = new Leap.Controller();
 
     board.on('ready', function(){
         console.log('five ready');
 
         var pinkieServo = new five.Servo({
-            pin: 13,
+            pin: 12,
             range: [1, 179], 
 	        fps: 200,//rate of movement between positions
 	        startAt: 90 //start at 90 degrees
+        });
+
+        var thumbMotor = new five.Motor({
+            pins: {
+                pwm: 3,
+                dir: 23
+            },
+            invertPWM: true
+        });
+
+        var indexMotor = new five.Motor({
+            pins: {
+                pwm: 2,
+                dir: 22
+            },
+            invertPWM: true
+        });
+
+        var midMotor = new five.Motor({
+            pins:{
+                pwm:5,
+                dir:25
+            },
+            invertPWM:true
+        });
+
+        var ringMotor = new five.Motor({
+            pins:{
+                pwm:4,
+                dir:24
+            },
+            invertPWM: true
+        });
+
+        var pinkieMotor = new five.Motor({
+            pins: {
+                pwm: 6,
+                dir: 26
+            },
+            invertPWM: true
+        });
+
+        board.repl.inject({
+            motor: thumbMotor,
+            motor: indexMotor,
+            motor: midMotor,
+            motor: ringMotor,
+            motor: pinkieMotor
         });
 
         controller.on("frame", function(frame) {
@@ -45,9 +93,7 @@ io.once('ready', function() {
             var nHands = frame.hands.length;
 
             // IF THERE IS JUST 1 HAND
-            if(nHands == 1) { //if one hand is present 
-            //begin if 
-                    
+            if(nHands == 1) { //if one hand is present
                 // RETRIEVE THE HAND OBJECT
                 var hand = frame.hands[0];
 
@@ -55,18 +101,22 @@ io.once('ready', function() {
                 var thumbFinger = hand.fingers[0];
                 var thumbPosition = thumbFinger.dipPosition;
                 var thumbX = thumbPosition[0];
+                var thumbZ = thumbPosition[2];
 
                 var indexFinger = hand.fingers[1];
                 var indexPosition = indexFinger.dipPosition;
                 var indexX = indexPosition[0];
+                var indexZ = indexPosition[2];
 
                 var middleFinger = hand.fingers[2];
                 var middlePosition = middleFinger.dipPosition;
                 var middleX = middlePosition[0];
+                var midZ = middlePosition[2];
 
                 var ringFinger = hand.fingers[3];
                 var ringPosition = ringFinger.dipPosition;
                 var ringX = ringPosition[0];
+                var ringZ = ringPosition[2];
 
                 var pinkieFinger = hand.fingers[4];
                 var pinkiePosition = pinkieFinger.dipPosition;
@@ -87,24 +137,39 @@ io.once('ready', function() {
                 // console.log("output", thumbX.map())
                 // ringServo.to(ringX.map());
 
-                console.log("output", thumbX.map())
-                pinkieServo.to(pinkieX.map());
+                console.log("output", indexZ.map());
+                // pinkieServo.to(pinkieX.map());
             }//end if for one hand detection
             else {
                 console.log("Please, place one hand over the LEAP motion sensor.");
+                // thumbMotor.stop();
+                // indexMotor.stop();
+                // midMotor.stop();
+                // ringMotor.stop();
+                // pinkieMotor.stop();
+                // pinkieServo.center();
             }
 
-            if(pinkieZ > 10) {
-                // motor.on("forward", function() {
-                //      console.log("forward", Date.now());
+           /* if(thumbZ > 41.5){
+                thumbMotor.forward(225);
+                console.log("Thumb open");
 
-                //        // demonstrate switching to reverse after 5 seconds
-                //        board.wait(5000, function() {
-                //          motor.reverse(255);
-                //        });
-                // });
-            }	
-	    });
+            }
+            else if (thumbZ <83.5){
+                thumbMotor.reverse(225);
+                console.log("Thumb close");
+
+            }*/
+            if(indexZ > 30){
+                indexMotor.reverse(200);
+                console.log("Index open");
+            }
+            else if (indexZ <83.5) {
+                indexMotor.forward(200);
+                console.log("Index close");
+
+            }
+        });
     }); // BOARD READY CLOSE
 
     Number.prototype.map = function () {

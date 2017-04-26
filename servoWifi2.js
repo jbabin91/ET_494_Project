@@ -3,14 +3,14 @@
 var VirtualSerialPort = require('udp-serial').SerialPort;
 var firmata = require('firmata');
 var five = require("johnny-five");
-var Leap = require("../ET_494_Project/node_modules/leapjs/lib/index"),
+var Leap = require("../node_modules/leapjs/lib/index"),
 	board, palm, motor, leap_range = [50,-50], servo_range = [0,179];
 
 
  
 //create the udp serialport and specify the host and port to connect to
 var sp = new VirtualSerialPort({
-  host: '192.168.1.3',
+  host: '192.168.1.2',
   type: 'udp4',//udp4
   port: 3030
 });
@@ -27,7 +27,7 @@ io.once('ready', function() {
     io.isReady = true;
 
     var board = new five.Board({io: io, repl: true});
-    var controller = new Leap.Controller()
+    var controller = new Leap.Controller();
 
     board.on('ready', function(){
         console.log('five ready');
@@ -90,7 +90,7 @@ io.once('ready', function() {
             // console.log("output", thumbX.map())
             // ringServo.to(ringX.map());
 
-            console.log("output", thumbX.map())
+            console.log("output", thumbX.map());
             pinkieServo.to(pinkieX.map());
         }//end if for one hand detection
         else {
@@ -118,7 +118,7 @@ io.once('ready', function() {
         // is the servo range reversed? uncomment below
         output = servo_range[1] - output;
         return output;
-    }
+    };
 
     /*********************************************************************************************************/
     /******************************** LEAP MOTION STATUS AND INITIALIZATION **********************************/
