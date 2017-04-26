@@ -4,7 +4,7 @@ var webSocket = require('ws'),
     ws = new webSocket('ws://127.0.0.1:6437'),
     // mm range of leap motion to use, see leap-range.js to find
     leap_range = [-100,100], // x of right hand
-    frame, palm;
+    frame, thumb;
 
 
 var VirtualSerialPort = require('udp-serial').SerialPort;
@@ -41,24 +41,13 @@ io.once('ready', function(){
             // if only one hand is present
             if (frame.hands && frame.hands.length == 1) {
                 // extract centre palm position in mm [x,y,z]
-                palm = frame.hands[0].palmPosition;
+                thumb = frame.hands.finger[0];
                 // map x position of leap to servo
                 //console.log("input",palm[0]);
-                console.log("output", palm[0].map())
-                servo.to(palm[0].map());
+                console.log("output" + thumb);
+               // servo.to(palm[0].map());
             }
         });
     });
 });
 
-// map two number ranges, adapted from SO: 10756313
-Number.prototype.map = function () {
-  var output = Math.round((this - leap_range[0]) * (servo.range[1] - servo.range[0]) / (leap_range[1] - leap_range[0]) + servo.range[0]);
-
-  // check output is within range, or cap
-  output = (output > servo.range[1]) ? servo.range[1] : output;
-  output = (output < servo.range[0]) ? servo.range[0] : output;
-  // is the servo range reversed? uncomment below
-  output = servo.range[1] - output;
-  return output;
-}
