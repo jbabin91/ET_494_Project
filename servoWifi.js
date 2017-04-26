@@ -119,7 +119,7 @@ controller.on("frame", function(frame) {
 	});
 
 
-//}); // BOARD READY CLOSE
+}); // BOARD READY CLOSE
 
 
 Number.prototype.map = function () {
